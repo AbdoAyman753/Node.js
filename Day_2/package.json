@@ -1,0 +1,16 @@
+{
+  "name": "node_http_requests_handling",
+  "version": "1.0.0",
+  "description": "learning how to handle http requests from node.js",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .",
+    "debug": "node --inspect ."
+  },
+  "keywords": [
+    "http"
+  ],
+  "author": "Abdelrahman M.Ayman",
+  "license": "ISC"
+}

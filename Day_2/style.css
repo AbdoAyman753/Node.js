@@ -1,0 +1,25 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    width: 100%;
+}
+.backgroundImage{
+    background-image: url('./images/R6S-background.jpg');
+    background-size:cover;
+    background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    text-align: center;
+}
+p{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+    font-stretch:extra-expanded;
+    font-size: xx-large;
+}
+iframe{
+    padding: 10vh;
+    border-radius: 5px;
+}
