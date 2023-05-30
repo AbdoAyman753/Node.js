@@ -5,6 +5,7 @@ const fs = require("fs");
 const AppError = require("../utils/AppError");
 const path = require("path");
 const User = require("../models/user");
+const { findByIdAndUpdate } = require("../models/to-do");
 
 router.use("/", (req, res, next) => {
   console.log("request happend at ", Date.now());
@@ -31,10 +32,11 @@ router.post("/", async (req, res,next) => {
   // try {
   const { email, password } = req.body;
   if(!email || !password){
-    const error = new Error('email and password are required');
-    err.status = 'error'
-    error.statusCode = 400;
-    return next(error)
+    // const error = new Error('email and password are required');
+    // err.status = 'error'
+    // error.statusCode = 400;
+    // return next(error)
+    next(new AppError('email and password required',400));
   }
   // const userCreated = await User.create({email,password});
   const userCreated = new User({ email, password });
@@ -49,9 +51,16 @@ router.post("/", async (req, res,next) => {
 // update users
 // put : replace the old document with the new document
 // patch: only modifies certain properties inside the document
-router.patch("/:id", (req, res) => {});
+router.patch("/:id", async(req, res) => {
+  const { id } = req.params;
+  const { email, password } = req.body;
+  await User.findByIdAndUpdate(id,{email, password});
+});
 // delete users
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", async(req, res) => {
+  const { id } = req.params;
+  await User.findByIdAndDelete(id);
+});
 
 router.use((req, res, next) => {
   console.log(req.data);
