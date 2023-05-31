@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const AppError = require("../utils/AppError");
 const User = require("../models/user");
+const { response } = require('express');
 
 
 const signUp = async (req, res,next) => {
@@ -14,7 +15,7 @@ const signUp = async (req, res,next) => {
       next(new AppError('email and password required',400));
     }
     // const userCreated = await User.create({email,password});
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 7);
     const userCreated = new User({ email, password:hashedPassword });
     await userCreated.save();
     userCreated.password = undefined;
@@ -32,7 +33,10 @@ const signUp = async (req, res,next) => {
     }
     const user = await User.findOne({email}).select('+password');
     if(!user) { return new AppError('user not found',404)}
-    const isMatched = await bcrypt.compare(user.password, password);
+    const isMatched = await bcrypt.compare(password, user.password);
+    if(!isMatched) { return next(new AppError('Invalid user',400))};
+    user.password = undefined;
+    res.send(user);
   }
 
   const getUsers = async (req, res, next) => {
@@ -57,4 +61,4 @@ const signUp = async (req, res,next) => {
     const { id } = req.params;
     await User.findByIdAndDelete(id);
   }
-  module.exports = {signUp, getUsers, getUserById, updateUserById, deleteUserById};
+  module.exports = {signUp, login, getUsers, getUserById, updateUserById, deleteUserById};

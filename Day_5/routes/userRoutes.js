@@ -1,9 +1,9 @@
 const express = require("express");
-
 const router = express.Router();
 
 
-const { signUp, getUsers, getUserById, updateUserById, deleteUserById } = require("../controllers/authenticationController");
+const { signUp, login, getUsers, getUserById, updateUserById, deleteUserById } = require("../controllers/authenticationController");
+const { loginValidation, signupValidation } = require("../utils/authenticationValidation");
 
 // middleware
 // router.use("/", (req, res, next) => {
@@ -20,8 +20,9 @@ router.get("/", getUsers);
 // Get User by ID
 router.get("/:id", getUserById);
 // Register User
-router.post("/", signUp);
-
+router.post("/", signupValidation, signUp);
+// Log-in
+router.post("/login", loginValidation, login);
 // update users
 // put : replace the old document with the new document
 // patch: only modifies certain properties inside the document
@@ -29,7 +30,6 @@ router.put("/:id", updateUserById);
 router.patch("/:id", updateUserById);
 // delete users
 router.delete("/:id", deleteUserById);
-
 // router.use((req, res, next) => {
 //   console.log(req.data);
 // });
