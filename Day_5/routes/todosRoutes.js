@@ -1,17 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const To_Do = require('../models/to-do');
+const {tokenAuth} = require('../utils/jwtAuth');
 
 // get todos
-router.get('/',async (req,res)=>{
+router.get('/', tokenAuth, async (req,res)=>{
 	// get all todos from database
-	const to_dos = await To_Do.find();
+	const {owner} = req.body;
+	// console.log(owner);
+	const to_dos = await To_Do.find({owner});
 	res.send(to_dos);
 })
 // get todo by id
-router.get('/:id',async (req,res)=>{
+router.get('/:id', tokenAuth, async (req,res)=>{
 	const {id}= req.params;
-	const to_dos = await To_Do.findById(id);
+	const {owner} = req.body;
+	const to_dos = await To_Do.findById({id,owner});
 	res.send(to_dos);
 })
 // create todos
@@ -20,7 +24,8 @@ router.post('/',async (req,res)=>{
     const new_todo = new To_Do({
         title:req.body.title,
         description:req.body.description,
-        status:req.body.status
+        status:req.body.status,
+		owner:req.body.owner
     });
     await new_todo.save();
 	console.log('data',req.body)
