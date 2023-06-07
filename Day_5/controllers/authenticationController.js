@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const AppError = require("../utils/AppError");
 const User = require("../models/user");
 const { response } = require('express');
+const jwt = require('jsonwebtoken');
 
 
 const signUp = async (req, res,next) => {
@@ -33,10 +34,11 @@ const signUp = async (req, res,next) => {
     }
     const user = await User.findOne({email}).select('+password');
     if(!user) { return new AppError('user not found',404)}
-    const isMatched = await bcrypt.compare(password, user.password);
+    const isMatched = user.checkPassword(password);
     if(!isMatched) { return next(new AppError('Invalid user',400))};
     user.password = undefined;
-    res.send(user);
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET_KEY);
+    res.send({token,user});
   }
 
   const getUsers = async (req, res, next) => {
