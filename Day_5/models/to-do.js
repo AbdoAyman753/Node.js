@@ -16,6 +16,11 @@ const to_doSchema = new Schema({
     enum: ["to-do", "in-progress", "done"],
     default: "to-do",
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User"
+  }
 });
 
 const To_Do = mongoose.model("To_Do", to_doSchema);
